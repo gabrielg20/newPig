@@ -28,6 +28,18 @@ public class PigComputerPlayer extends GameComputerPlayer {
      */
     @Override
     protected void receiveInfo(GameInfo info) {
+        if (info instanceof PigGameState) {
+            PigGameState currentGameState = (PigGameState) info;
+            if (currentGameState.getPlayerId() == this.playerNum) {
+                int randNum = (int) (Math.random() * 2);
+                if (randNum == 0) {
+                    game.sendAction(new PigRollAction(this));
+                } else if (randNum == 1) {
+                    game.sendAction(new PigHoldAction(this));
+                }
+            }
+        }
+        //return;
         // TODO  You will implement this method
     }//receiveInfo
 

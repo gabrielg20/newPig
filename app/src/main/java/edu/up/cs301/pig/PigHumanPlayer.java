@@ -22,7 +22,7 @@ import android.view.View.OnClickListener;
  */
 public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
 
-	/* instance variables */
+    /* instance variables */
 
     // These variables will reference widgets that will be modified during play
     private TextView    playerScoreTextView = null;
@@ -61,7 +61,42 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
     @Override
     public void receiveInfo(GameInfo info) {
         //TODO You will implement this method to receive state objects from the game
-    }//receiveInfo
+        if (info instanceof PigGameState){
+            PigGameState infoPig = (PigGameState) info;
+            if(infoPig.getPlayerId() == 0) {
+                playerScoreTextView.setText("" + infoPig.getPlayer0Score());
+                oppScoreTextView.setText("" + infoPig.getPlayer1Score());
+            } else {
+                playerScoreTextView.setText("" +infoPig.getPlayer1Score());
+                oppScoreTextView.setText("" +infoPig.getPlayer0Score());
+            }
+            turnTotalTextView.setText("" +infoPig.getRunningScore());
+            switch (infoPig.getDieValue()){
+                case 1:
+                    dieImageButton.setImageResource(R.drawable.face1);
+                    break;
+                case 2:
+                    dieImageButton.setImageResource(R.drawable.face2);
+                    break;
+                case 3:
+                    dieImageButton.setImageResource(R.drawable.face3);
+                    break;
+                case 4:
+                    dieImageButton.setImageResource(R.drawable.face4);
+                    break;
+                case 5:
+                    dieImageButton.setImageResource(R.drawable.face5);
+                    break;
+                case 6:
+                    dieImageButton.setImageResource(R.drawable.face6);
+                    break;
+            }
+
+        }
+        else {
+            flash(Color.BLUE, 250);
+        }
+        this.getTopView().invalidate();    }//receiveInfo
 
     /**
      * this method gets called when the user clicks the die or hold button. It
@@ -72,6 +107,18 @@ public class PigHumanPlayer extends GameHumanPlayer implements OnClickListener {
      */
     public void onClick(View button) {
         //TODO  You will implement this method to send appropriate action objects to the game
+        if (button instanceof Button){
+            Button theClickedButton = (Button) button;
+
+            String buttonText = theClickedButton.getText().toString();
+            if (buttonText.equalsIgnoreCase("HOLD")) {
+                game.sendAction(new PigHoldAction(this));
+            }
+            return;
+        }
+
+            game.sendAction(new PigRollAction(this));
+
     }// onClick
 
     /**
